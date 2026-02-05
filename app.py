@@ -114,14 +114,21 @@ plot_files = {
 }
 
 def show_plot(qid):
-    if qid in plot_files:
-        path = os.path.join("Figs", plot_files[qid])
-        if os.path.exists(path):
-            st.image(path, use_container_width=True)
-        else:
-            st.warning("Plot file not found in Figs folder.")
-    else:
+    if qid not in plot_files:
         st.info("No plot mapped for this question yet.")
+        return
+
+    fname = plot_files[qid]
+
+    path1 = os.path.join("Figs", fname)   # preferred
+    path2 = fname                         # fallback (root)
+
+    if os.path.exists(path1):
+        st.image(path1, use_container_width=True)
+    elif os.path.exists(path2):
+        st.image(path2, use_container_width=True)
+    else:
+        st.warning(f"Plot file not found: {fname}")
 
 if page == "Overview":
     st.subheader("Dataset Overview")
